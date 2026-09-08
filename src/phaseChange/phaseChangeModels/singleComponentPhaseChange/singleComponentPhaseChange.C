@@ -102,6 +102,34 @@ Foam::singleComponentPhaseChange::singleComponentPhaseChange
         dimensionedScalar("0", dimless/dimTime, 0),
         "zeroGradient"
     ),
+    vDotAlphaCon_
+    (
+        IOobject
+        (
+        "vDotAlphaCon_",
+        mesh_.time().timeName(),
+        mesh_,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+        mesh_,
+        dimensionedScalar("0", dimless/dimTime, 0),
+        "zeroGradient"
+    ),
+    vDotAlphaEvp_
+    (
+        IOobject
+        (
+        "vDotAlphaEvp_",
+        mesh_.time().timeName(),
+        mesh_,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+        mesh_,
+        dimensionedScalar("0", dimless/dimTime, 0),
+        "zeroGradient"
+    ),
     limitHeatFlux_(false)
 {
     IOdictionary phaseChangeProperties
@@ -212,8 +240,6 @@ void Foam::singleComponentPhaseChange::correct()
     psi0_.ref() = phaseChangeEnergy.internalField() /
                   satProp_->L().internalField();
 
-
-
     const volScalarField& rho1 = phase1_.thermo().rho();
     if(limitHeatFlux_)
     {
@@ -228,6 +254,9 @@ void Foam::singleComponentPhaseChange::correct()
     psi0_.correctBoundaryConditions();
 
     massSource_ = massModel_->massSource(psi0_);
+
+    vDotAlphaCon_ = massModel_->vDotAlphal()[0]();
+    vDotAlphaEvp_ = massModel_->vDotAlphal()[1]();
 
     for (auto& mModel: macroModels_)
     {

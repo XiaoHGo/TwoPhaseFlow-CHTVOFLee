@@ -62,13 +62,10 @@ Foam::hardtWondraGasPhase::hardtWondraGasPhase
     ),
     cutoff_(modelDict().lookupOrDefault<scalar>("cutoff",1e-3)),
     spread_(modelDict().lookupOrDefault<scalar>("spread",3))
-
-
-
-
 {
 
 }
+
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
@@ -186,3 +183,5 @@ Foam::hardtWondraGasPhase::alphaSource( volScalarField& rhoSource)
 
    return alphaSource;
 }
+
+// ************************************************************************* //

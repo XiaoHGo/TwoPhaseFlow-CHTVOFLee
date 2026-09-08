@@ -65,3 +65,108 @@ Foam::massSourceTermModel::modelDict()
 {
     return massSourceTermModelCoeffs_;
 }
+
+Foam::tmp<Foam::volScalarField>Foam::massSourceTermModel::dmdt(const volScalarField& T) const
+{
+    return tmp<volScalarField>
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                "zeroDmdt",
+                phase1_.mesh().time().timeName(),
+                phase1_.mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            phase1_.mesh(),
+            dimensionedScalar
+            (
+                dimDensity/dimTime,
+                Zero
+            )
+        )
+    );
+}
+
+Foam::tmp<Foam::volScalarField>Foam::massSourceTermModel::volTransfer(const volScalarField& T) const
+{
+    return tmp<volScalarField>
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                "zeroVolTransfer",
+                phase1_.mesh().time().timeName(),
+                phase1_.mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            phase1_.mesh(),
+            dimensionedScalar
+            (
+                dimless/dimTime,
+                Zero
+            )
+        )
+    );
+}
+
+Foam::Pair<Foam::tmp<Foam::volScalarField>>Foam::massSourceTermModel::vDotAlphal() const
+{
+    auto makeZero = [&]()
+    {
+        return tmp<volScalarField>
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "zeroVdotAlphal",
+                    phase1_.mesh().time().timeName(),
+                    phase1_.mesh(),
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE
+                ),
+                phase1_.mesh(),
+                dimensionedScalar(dimless/dimTime, 0)
+            )
+        );
+    };
+
+    return Pair<tmp<volScalarField>>(makeZero(), makeZero());
+}
+
+Foam::Pair<Foam::tmp<Foam::volScalarField>>Foam::massSourceTermModel::vDotP() const
+{
+    auto makeZero = [&]()
+    {
+        return tmp<volScalarField>
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "zeroVdotP",
+                    phase1_.mesh().time().timeName(),
+                    phase1_.mesh(),
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE
+                ),
+                phase1_.mesh(),
+                dimensionedScalar
+                (
+                    dimTime/(dimDensity*dimLength*dimLength),  // [-1 1 1 0 0 0 0]
+                    0
+                )
+            )
+        );
+    };
+
+    return Pair<tmp<volScalarField>>(makeZero(), makeZero());
+}
+

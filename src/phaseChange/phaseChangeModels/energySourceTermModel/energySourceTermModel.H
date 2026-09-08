@@ -166,6 +166,11 @@ public:
 
         virtual tmp<volScalarField> energyFlux2() = 0;
 
+        //- Return source matrix for a global single-temperature equation.
+        //  Default implementation is zero.
+        //  Models such as BoilingLee may override this function.
+        virtual tmp<fvScalarMatrix> heatTransfer(const volScalarField& T);
+
         virtual tmp<surfaceScalarField> getalphaf()
         {
             return fvc::interpolate(phase1_);

@@ -93,6 +93,10 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::Schrage::TSource1()
     const volScalarField& T2 = phase2_.thermo().T();
     const volScalarField& T1 = phase1_.thermo().T();
 
+    Info<< "=== Schrage::TSource1() Debug ===" << endl;
+    Info<< "psi2 min/max: " << gMin(psi2) << " / " << gMax(psi2) << endl;
+    Info<< "T2 min/max: "   << gMin(T2)   << " / " << gMax(T2)   << endl;
+    Info<< "TSat min/max: " << gMin(TSat) << " / " << gMax(TSat) << endl;
 
     volScalarField TSource
     (

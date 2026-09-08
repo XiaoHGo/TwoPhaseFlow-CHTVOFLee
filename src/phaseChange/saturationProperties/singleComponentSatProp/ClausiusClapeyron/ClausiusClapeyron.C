@@ -82,7 +82,7 @@ Foam::ClausiusClapeyron::C0()
 Foam::scalar
 Foam::ClausiusClapeyron::satT(scalar p) const
 {
-    scalar tsati = L0_/(R_ * (Foam::log(p) - C0_));
+    scalar tsati = L0_/(R_ * (C0_ - Foam::log(p)));
     return tsati;
 }
 

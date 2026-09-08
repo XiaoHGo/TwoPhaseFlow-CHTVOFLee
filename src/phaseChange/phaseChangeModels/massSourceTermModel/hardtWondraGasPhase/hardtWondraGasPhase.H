@@ -42,6 +42,7 @@ SourceFiles
 #include "volFields.H"
 #include "dimensionedScalar.H"
 #include "autoPtr.H"
+#include "Pair.H"
 
 #include "fvScalarMatrix.H"
 #include "fvm.H"

@@ -1,0 +1,5 @@
+fluid/multiCourantNo.C
+solid/solidRegionDiffNo.C
+multiRegionCavitationFlow.C
+
+EXE = $(FOAM_USER_APPBIN)/multiRegionCavitationFlow

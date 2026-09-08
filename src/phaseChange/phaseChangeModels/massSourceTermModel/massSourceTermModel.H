@@ -147,8 +147,20 @@ public:
     // Member Functions
 
         virtual tmp<volScalarField> massSource(volScalarField& rhoSource) = 0;
-
         virtual tmp<volScalarField> alphaSource(volScalarField& rhoSource) = 0;
+
+        virtual tmp<volScalarField> volTransfer(const volScalarField& T) const;
+        //virtual tmp<volScalarField> alphaTransfer(const volScalarField& T) const;
+        virtual tmp<volScalarField> dmdt(const volScalarField& T) const;
+        
+        //- Return the mass condensation and vaporisation rates as a
+        //  coefficient to multiply (1 - alphal) for the condensation rate
+        //  and a coefficient to multiply  alphal for the vaporisation rate
+        virtual Pair<tmp<volScalarField>> vDotAlphal() const;
+
+        //- Return the mass condensation and vaporisation rates as coefficients
+        //  to multiply (p - pSat)
+        virtual Pair<tmp<volScalarField>> vDotP() const;
 };
 
 

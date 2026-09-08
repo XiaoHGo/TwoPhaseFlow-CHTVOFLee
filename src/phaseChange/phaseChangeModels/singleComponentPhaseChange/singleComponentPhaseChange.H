@@ -91,14 +91,21 @@ class singleComponentPhaseChange
 
     volScalarField alphaSource_;
 
+    volScalarField vDotAlphaCon_;
+
+    volScalarField vDotAlphaEvp_;
+
     bool limitHeatFlux_;
 
 
 public:
+    reconstructionSchemes& surf()
+    {
+        return surf_;
+    }
 
     //- Runtime type information
    // TypeName("singleComponentPhaseChange");
-
 
     // Constructors
 
@@ -158,9 +165,52 @@ public:
         return alphaSource_;
     }
 
+    //- Return the volumetric condensation and vaporisation rates as a
+    //  coefficient to multiply (1 - alphal) for the condensation rate
+    //  and a coefficient to multiply  alphal for the vaporisation rate
+    volScalarField& vDotAlphaCon()
+    {
+        return vDotAlphaCon_;
+    }
+    volScalarField& vDotAlphaEvp()
+    {
+        return vDotAlphaEvp_;
+    }
+    //Pair<tmp<volScalarField>> vDotAlphal() const
+    //{
+    //    return massModel_->vDotAlphal();
+    //}
+
+    //- Return the volumetric condensation and vaporisation rates as
+    //  coefficients to multiply (p - pSat)
+    Pair<tmp<volScalarField>> vDotP() const
+    {
+        return massModel_->vDotP();
+    }
+
     const volScalarField& psi0()
     {
         return psi0_;
+    }
+
+    tmp<fvScalarMatrix> heatTransfer(const volScalarField& T)
+    {
+        return energyModel_->heatTransfer(T);
+    }
+
+    tmp<volScalarField> volTransfer(const volScalarField& T)
+    {
+        return massModel_->volTransfer(T);
+    }
+
+    //tmp<volScalarField> alphaTransfer(const volScalarField& T)
+    //{
+    //    return massModel_->alphaTransfer(T);
+    //}
+
+    tmp<volScalarField> dmdt(const volScalarField& T)
+    {
+        return massModel_->dmdt(T);
     }
 
     tmp<fvScalarMatrix> TSource1()

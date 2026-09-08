@@ -69,8 +69,19 @@ Foam::energySourceTermModel::modelDict()
     return energySourceTermModelCoeffs_;
 }
 
+
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::energySourceTermModel::heatTransfer(const volScalarField& T)
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            T,
+            dimEnergy/dimTime
+        )
+    );
+}
 
 // ************************************************************************* //

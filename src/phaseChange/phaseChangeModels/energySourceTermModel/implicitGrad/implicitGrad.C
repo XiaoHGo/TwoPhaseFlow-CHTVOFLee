@@ -58,11 +58,10 @@ Foam::implicitGrad::implicitGrad
     ),
     impDiffFlux_(phase1.mesh())
 {
-
+    
 }
 
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Public Member Functions  * * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::fvScalarMatrix> Foam::implicitGrad::TSource1()
 {
@@ -77,7 +76,7 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::implicitGrad::TSource1()
             surf_.normal(),
             surf_.centre(),
             phase1_.thermo().T(),
-            phase1_.thermo().kappaEff(turbModel_.alphat()),
+            phase1_.thermo().kappa(),
             TSat,
             false,
             dimPower
@@ -101,7 +100,7 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::implicitGrad::TSource2()
             surf_.normal(),
             surf_.centre(),
             phase2_.thermo().T(),
-            phase2_.thermo().kappaEff(turbModel_.alphat()),
+            phase2_.thermo().kappa(),
             TSat,
             true,
             dimPower
@@ -142,7 +141,7 @@ Foam::tmp<Foam::volScalarField> Foam::implicitGrad::energyFlux1()
             surf_.normal(),
             surf_.centre(),
             phase1_.thermo().T(),
-            phase1_.thermo().kappaEff(turbModel_.alphat()),
+            phase1_.thermo().kappa(),
             TSat,
             false
         )
@@ -166,7 +165,8 @@ Foam::tmp<Foam::volScalarField> Foam::implicitGrad::energyFlux2()
             surf_.normal(),
             surf_.centre(),
             phase2_.thermo().T(),
-            phase2_.thermo().kappaEff(turbModel_.alphat()),
+            phase2_.thermo().kappa(),
+            //phase2_.thermo().kappaEff(turbModel_.alphat()),
             TSat,
             true
         )

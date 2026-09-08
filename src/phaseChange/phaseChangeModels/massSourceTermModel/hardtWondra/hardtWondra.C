@@ -68,7 +68,6 @@ Foam::hardtWondra::hardtWondra
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-
 Foam::tmp<Foam::volScalarField>
 Foam::hardtWondra::massSource( volScalarField& rhoSource)
 {
@@ -186,3 +185,5 @@ Foam::hardtWondra::alphaSource( volScalarField& rhoSource)
 
    return alphaSource;
 }
+
+// ************************************************************************* //
