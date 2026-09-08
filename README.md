@@ -131,3 +131,8 @@ For details see:
 https://gitlab.com/openfoam/core/openfoam/-/work_items/1676
 
 https://gitlab.com/openfoam/core/openfoam/-/work_items/1753
+
+### Conjugate-heat-transfer VOF solver equipped with Lee-type phase change model
+This model has only been tested in OpenFOAM 2406.
+The cavitation model has not been tested yet.
+-----8th Sepetermber 2026
