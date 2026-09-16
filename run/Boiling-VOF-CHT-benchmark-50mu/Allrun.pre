@@ -1,0 +1,45 @@
+#!/bin/sh
+cd "${0%/*}" || exit
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
+
+# Generate fms geometry files
+# python3 generate_fms.py
+
+#restore0Dir
+cp -r 0.orig 0
+
+# Solid mesh
+cp system/meshDict.solid system/meshDict
+runApplication -s solid cartesianMesh 
+mv constant/polyMesh constant/solid/
+rm -f system/meshDict
+
+# Fluid mesh
+cp system/meshDict.fluid system/meshDict
+runApplication -s fluid cartesianMesh 
+mv constant/polyMesh constant/fluid/
+rm -f system/meshDict
+
+# Scale mm -> m
+runApplication -s solid transformPoints -region solid -scale 0.001
+runApplication -s fluid transformPoints -region fluid -scale 0.001
+
+touch chtReacting_2D_5mm_D200W200H400.OpenFOAM
+
+# Apply boundary conditions
+for region in $(foamListRegions)
+do
+    runApplication -s $region changeDictionary \
+        -region $region -subDict dictionaryReplacement
+done
+
+# Initialise fields
+#runApplication initAlphaField -region fluid
+runApplication -s fluid setFields -region fluid
+runApplication -s solid setFields -region solid
+
+runApplication -s solid renumberMesh -region solid -overwrite
+runApplication -s fluid renumberMesh -region fluid -overwrite
+
+#runApplication -s fluid potentialFoam -region fluid
+#------------------------------------------------------------------------------

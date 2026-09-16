@@ -1,0 +1,110 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseChangeProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+energySourceTermModel BoilingLee;//implicitGrad;
+
+massSourceTermModel boilingLeeMassSource;//HybridPhaseChangeMass;
+
+BoilingLeeCoeffs
+        {
+           C [0 0 -1 0 0 0 0] 100;
+
+           Tactivate [0 0 0 1 0 0 0] 373.15;
+
+           alphaMin 0.01;
+        }
+
+boilingLeeMassSourceCoeffs
+        {
+           C [0 0 -1 0 0 0 0] 100;
+
+           Tactivate [0 0 0 1 0 0 0] 373.15;
+
+           alphaMin 0.01;
+        }
+/*
+HybridPhaseChangeMassCoeffs
+{
+    interfaceModel
+    {
+        massSourceTermModel        hardtWondra;
+        hardtWondraCoeffs
+        {
+            cutoff      1e-3;
+            spread      0.2;
+        } 
+    }
+
+    cavitationModel
+    {
+        massSourceTermModel       cavitationMassSource;
+        cavitationMassSourceCoeffs
+        {
+            cutoff      1e-3;
+            n           1e+13;
+            dNuc        1e-06;
+            Cc          1;
+            Cv          1;
+        }
+    }
+}
+*/
+/*
+marcoModels
+{
+    directEvaporation
+    {
+        type directEvaporation;
+        superheated 1;
+    }
+}
+
+satProperties
+{
+    singleComponentSatProp ClausiusClapeyron;
+    Tmin    100;
+    Tmax    500;
+    pSat0   3540;    // 300K对应水的饱和压力
+    TSat0   300.15;  // 参考温度
+    L0      2.4e6;
+    R       461.5;
+}
+
+satProperties
+{
+    singleComponentSatProp ClausiusClapeyron;
+    Tmin 100;
+    Tmax 500;
+    pSat0 611.0;      //  Pa (@273.15K, 6.11hPa = 611 Pa)
+    TSat0 273.15;     //  K (0°C)
+    L0 2.5e6;         //  J/kg (2.5×10^6 J/kg)
+    R 461.5;          //  J/(kg·K)
+}
+*/
+
+satProperties
+{
+    singleComponentSatProp function;
+    Tmin 100;
+    Tmax 500;
+    pSat constant 101325;   // or 0.9e5 Pa
+    TSat constant 373.15;
+    L constant 2.26e6;
+}
+
+
+// ************************************************************************* //

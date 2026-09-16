@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// system/meshDict.fluid
+maxCellSize     0.05;    // mm，全局
+surfaceFile     "fluid2D.fms";
+
+localRefinement
+{
+    // 固液界面附近加密
+    fluid_to_solid_ribtop
+    {
+        cellSize    0.05;
+    }
+    fluid_to_solid_ribside
+    {
+        cellSize    0.05;
+    }
+    fluid_to_solid_slotbot
+    {
+        cellSize    0.05;
+    }
+}
+
+// 可选：边界层（改善固液界面热通量精度）
+boundaryLayers
+{
+    patchBoundaryLayers
+    {
+        fluid_to_solid_ribtop
+        {
+            nLayers                 3;
+            thicknessRatio          1.2;
+            maxFirstLayerThickness  0.02;
+        }
+        fluid_to_solid_ribside
+        {
+            nLayers                 3;
+            thicknessRatio          1.2;
+            maxFirstLayerThickness  0.02;
+        }
+        fluid_to_solid_slotbot
+        {
+            nLayers                 3;
+            thicknessRatio          1.2;
+            maxFirstLayerThickness  0.02;
+        }
+    }
+}
+
+// ************************************************************************* //

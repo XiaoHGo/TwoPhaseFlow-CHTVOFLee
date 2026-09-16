@@ -1,0 +1,33 @@
+#!/bin/sh
+cd "${0%/*}" || exit
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
+rm -rf 0
+cp -r 0.orig 0
+
+cp blockMeshDict.fluid system/fluid/blockMeshDict
+cp blockMeshDict.solid system/solid/blockMeshDict
+
+# Fluid Meshing
+runApplication -s fluid blockMesh -region fluid
+runApplication -s solid blockMesh -region solid
+
+touch Cavitation_comp_1.OpenFOAM
+
+# Apply boundary conditions
+for region in $(foamListRegions)
+do
+    runApplication -s $region changeDictionary \
+        -region $region -subDict dictionaryReplacement
+done
+
+# Set initial Fields
+runApplication -s fluid setFields -region fluid
+runApplication -s solid setFields -region solid
+
+# Decompose
+runApplication decomposePar -allRegions
+
+runParallel $(getApplication)
+
+# Reconstruct
+runApplication reconstructPar -allRegions

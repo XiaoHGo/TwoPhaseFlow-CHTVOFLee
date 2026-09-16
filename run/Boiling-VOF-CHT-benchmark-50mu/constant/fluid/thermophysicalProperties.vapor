@@ -1,0 +1,125 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      thermophysicalProperties.gas;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Gas phase: water vapour
+// Hf(vapour) = 0: reference enthalpy, latent heat comes from
+//   Hf(vapour) - Hf(liquid) = 0 - (-2.257e6) = 2.257 MJ/kg
+
+thermoType
+{
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const; // tabulated; 
+    thermo          hConst; // hTabulated
+    equationOfState perfectGas;
+    specie          specie;
+    energy          sensibleInternalEnergy;
+}
+
+mixture
+{
+    specie
+    {
+        molWeight   18.0;
+    }
+    thermodynamics
+    {
+        Cp         2257;
+        Hf            0;
+        Sf            0;
+        // CpFile         "thermo/cp.dat"; // for OpenFOAM-v2206
+        // sampleRate    1;
+        // nPoints     100;
+        //Cp               // for OpenFOAM-v2406
+        //(
+        //    (50 1850)
+        //    (100 1850)
+        //    (150 1850)
+        //    (175 1850)
+        //    (200 1851)
+        //    (225 1852)
+        //    (250 1855)
+        //    (275 1859)
+        //    (300 1864)
+        //    (325 1871)
+        //    (350 1880)
+        //    (375 1890)
+        //    (400 1901)
+        //    (450 1926)
+        //    (500 1954)
+        //    (550 1984)
+        //    (600 2015)
+        //);
+        //TMin         50;
+        //TMax        600;
+    }
+    transport
+    {
+        mu         1e-5;
+        Pr            1;
+        // MuFile         "thermo/mu.dat";
+        // KappaFile      "thermo/kappa.dat";
+        //kappa
+        //(
+        //    (50 0.007)
+        //    (100 0.009)
+        //    (150 0.012)
+        //    (175 0.015)
+        //    (200 0.018)
+        //    (225 0.021)
+        //    (250 0.024)
+        //    (275 0.027)
+        //    (300 0.020)
+        //    (325 0.022)
+        //    (350 0.024)
+        //    (375 0.026)
+        //    (400 0.028)
+        //    (450 0.032)
+        //    (500 0.036)
+        //    (550 0.040)
+        //    (600 0.044)
+        //);
+        //mu
+        //(
+        //    (50 0.6e-6)
+        //    (100 0.8e-6)
+        //    (150 1.2e-6)
+        //    (175 1.5e-6)
+        //    (200 1.8e-6)
+        //    (225 2.2e-6)
+        //    (250 2.6e-6)
+        //    (275 3.0e-6)
+        //    (300 9.8e-6)
+        //    (325 1.1e-5)
+        //    (350 1.2e-5)
+        //    (375 1.3e-5)
+        //    (400 1.4e-5)
+        //    (450 1.6e-5)
+        //    (500 1.8e-5)
+        //    (550 2.0e-5)
+        //    (600 2.2e-5)
+        //);
+        //nPoints     100;
+        //TMin         50;
+        //TMax        600;
+    }
+}
+
+
+dpdt off;
+
+
+// ************************************************************************* //

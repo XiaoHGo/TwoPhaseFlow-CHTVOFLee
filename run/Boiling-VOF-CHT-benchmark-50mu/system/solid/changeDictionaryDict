@@ -1,0 +1,48 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+
+dictionaryReplacement
+{
+    boundary
+    {
+        solid_to_fluid_ribtop
+        {
+            type        mappedWall;
+            inGroups    1 (wall);
+            sampleMode  nearestPatchFace;
+            sampleRegion fluid;
+            samplePatch fluid_to_solid_ribtop;
+        }
+        solid_to_fluid_ribside
+        {
+            type        mappedWall;
+            inGroups    1 (wall);
+            sampleMode  nearestPatchFace;
+            sampleRegion fluid;
+            samplePatch fluid_to_solid_ribside;
+        }
+        solid_to_fluid_slotbot
+        {
+            type        mappedWall;
+            inGroups    1 (wall);
+            sampleMode  nearestPatchFace;
+            sampleRegion fluid;
+            samplePatch fluid_to_solid_slotbot;
+        }
+    }
+
+}
+
+// ************************************************************************* //

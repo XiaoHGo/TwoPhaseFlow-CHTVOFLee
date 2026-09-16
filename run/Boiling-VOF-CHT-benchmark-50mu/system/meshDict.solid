@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// system/meshDict.solid
+maxCellSize     0.05;
+surfaceFile     "solid2D.fms";
+
+localRefinement
+{
+    solid_to_fluid_ribtop
+    {
+        cellSize    0.05;
+    }
+    solid_to_fluid_ribside
+    {
+        cellSize    0.05;
+    }
+    solid_to_fluid_slotbot
+    {
+        cellSize    0.05;
+    }
+}
+
+// ************************************************************************* //

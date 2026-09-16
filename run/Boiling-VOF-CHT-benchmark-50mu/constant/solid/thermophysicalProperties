@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      thermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Copper properties at ~100-200°C
+// rho  = 8960  kg/m³
+// Cp   = 385   J/kg/K
+// kappa= 401   W/m/K  (thermal conductivity)
+
+thermoType
+{
+    type            heSolidThermo;
+    mixture         pureMixture;
+    transport       constIso;
+    thermo          hConst;
+    equationOfState rhoConst;
+    specie          specie;
+    energy          sensibleEnthalpy;
+}
+
+mixture
+{
+    specie
+    {
+        nMoles          1;
+        molWeight       63.546;     // copper [g/mol]
+    }
+
+    equationOfState
+    {
+        rho             8960;       // [kg/m³]
+    }
+
+    thermodynamics
+    {
+        Cp              385;        // [J/kg/K]
+        Hf              0;
+    }
+
+    transport
+    {
+        kappa           401;        // thermal conductivity [W/m/K]
+    }
+}
+
+// ************************************************************************* //

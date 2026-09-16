@@ -1,0 +1,64 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Droplet: diameter 1mm, centred at x=0.0024m (domain centre),
+// y=0.0041m (top of domain at 0.0046, droplet radius 0.0005,
+// centre placed half-radius below top to keep droplet fully inside)
+// z=0.0001m (mid-plane of 2D domain)
+
+defaultFieldValues
+(
+    volScalarFieldValue alpha.water  0
+    volScalarFieldValue alpha.vapor  1
+    volVectorFieldValue U            (0 0 0)
+    volScalarFieldValue T            350
+    volScalarFieldValue T.vapor      350
+    volScalarFieldValue T.water      350
+);
+
+regions
+(
+    cylinderToCell
+    {
+        p1      (0.010 0.009 -1);
+        p2      (0.010 0.009  1);
+        radius  0.0005;
+        fieldValues
+        (
+            volScalarFieldValue alpha.water  1
+            volScalarFieldValue alpha.vapor  0
+            volVectorFieldValue U            (0 -3 0)
+            volScalarFieldValue T            350
+            volScalarFieldValue T.vapor      350
+            volScalarFieldValue T.water      350
+        );
+    }
+    boxToCell
+    {
+        box (0 0.000 -1) (0.02 0.001 1);  // 200μm thin water layer
+        fieldValues
+        (
+            volScalarFieldValue alpha.water   1
+            volScalarFieldValue alpha.vapor   0
+            volVectorFieldValue U             (0 0 0)
+            volScalarFieldValue T             373.15
+            volScalarFieldValue T.vapor       373.15
+            volScalarFieldValue T.water       373.15
+        );
+    }
+);
+
+// ************************************************************************* //

@@ -1,0 +1,172 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+/*--------------------------------*- C++ -*----------------------------------*\
+| snappyHexMeshDict                                                           |
+| Two-region meshing: fluid (y=2..12mm) + solid (y=0..2mm)                   |
+| 20 cavities: w=0.4mm d=0.2mm gap=0.4mm  x=2mm..17.6mm  z贯通              |
+| Patches from STL surface names — must match fluid.stl / solid.stl          |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+
+castellatedMesh true;
+snap            false;
+addLayers       false;
+
+// ── Geometry ──────────────────────────────────────────────────────────────
+geometry
+{
+    fluid.stl
+    {
+        type triSurfaceMesh;
+        name fluid;
+        regions
+        {
+            sides               { name sides; }
+            top                 { name top; }
+            fluid_to_solid_ribtop  { name fluid_to_solid_ribtop; }
+            fluid_to_solid_slotbot { name fluid_to_solid_slotbot; }
+            fluid_to_solid_ribside { name fluid_to_solid_ribside; }
+        }
+    }
+
+    solid.stl
+    {
+        type triSurfaceMesh;
+        name solid;
+        regions
+        {
+            sides               { name sides; }
+            bottom              { name bottom; }
+            solid_to_fluid_ribtop  { name solid_to_fluid_ribtop; }
+            solid_to_fluid_slotbot { name solid_to_fluid_slotbot; }
+            solid_to_fluid_ribside { name solid_to_fluid_ribside; }
+        }
+    }
+
+    // Refinement zones
+    cavityStrip           // y=1.7..2.1mm covers ribtop + all slots
+    {
+        type searchableBox;
+        min ( 0.0018  0.0017  0.0000 );
+        max ( 0.0178  0.0021  0.0004 );
+    }
+
+    fluidNearWall         // y=2.0..2.5mm — first 0.5mm of fluid above ribtop
+    {
+        type searchableBox;
+        min ( 0.0000  0.0020  0.0000 );
+        max ( 0.0200  0.0025  0.0004 );
+    }
+}
+
+// ── Castellated mesh ───────────────────────────────────────────────────────
+castellatedMeshControls
+{
+    maxLocalCells        3000000;
+    maxGlobalCells       6000000;
+    minRefinementCells   5;
+    nCellsBetweenLevels  2;
+    maxLoadUnbalance     0.1;
+    allowFreeStandingZoneFaces true;
+    resolveFeatureAngle  30;
+
+    features ();
+
+     refinementSurfaces
+    {
+        fluid
+        {
+            level (2 2);
+        }
+        solid
+        {
+            level (2 2);
+        }
+    }
+
+    refinementRegions
+    {
+        // level-1: strip covering cavity depth + just above (0.1mm->0.05mm)
+        cavityStrip
+        {
+            mode inside;
+            levels ((1 1));
+        }
+        // level-2: first 0.5mm fluid above ribtop (0.05mm->0.025mm)
+        fluidNearWall
+        {
+            mode inside;
+            levels ((2 2));
+        }
+    }
+
+    // Point inside fluid region
+    // locationInMesh ( 0.010 0.007 0.0002 );
+    locationsInMesh (
+        ( (0.010 0.007 0.0002) fluid )
+        ( (0.010 0.001 0.0002) solid )
+    );
+}
+
+// ── Snap ──────────────────────────────────────────────────────────────────
+snapControls
+{
+    nSmoothPatch   3;
+    tolerance      2.0;
+    nSolveIter     30;
+    nRelaxIter     5;
+}
+
+// ── Layers (off) ──────────────────────────────────────────────────────────
+addLayersControls
+{
+    relativeSizes true;
+    layers {};
+    expansionRatio          1.2;
+    finalLayerThickness     0.3;
+    minThickness            0.1;
+    nGrow                   0;
+    featureAngle            60;
+    nRelaxIter              3;
+    nSmoothSurfaceNormals   1;
+    nSmoothNormals          3;
+    nSmoothThickness        10;
+    maxFaceThicknessRatio   0.5;
+    maxThicknessToMedialRatio 0.3;
+    minMedialAxisAngle      90;
+    nBufferCellsNoExtrude   0;
+    nLayerIter              50;
+}
+
+// ── Mesh quality ──────────────────────────────────────────────────────────
+meshQualityControls
+{
+    maxNonOrtho             65;
+    maxBoundarySkewness     20;
+    maxInternalSkewness     4;
+    maxConcave              80;
+    minVol                  1e-13;
+    minTetQuality           1e-30;
+    minArea                 -1;
+    minTwist                0.02;
+    minDeterminant          0.001;
+    minFaceWeight           0.05;
+    minVolRatio             0.01;
+    minTriangleTwist        -1;
+    nSmoothScale            4;
+    errorReduction          0.75;
+}
+
+debug          0;
+mergeTolerance 1e-6;

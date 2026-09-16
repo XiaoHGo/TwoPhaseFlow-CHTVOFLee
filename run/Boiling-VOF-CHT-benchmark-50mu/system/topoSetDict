@@ -1,0 +1,183 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Version: 2406
+    \\  /    A nd           | Web:      www.OpenFOAM.com
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Strategy:
+// 1. Create solidCellSet from solid base + 12 ribs
+// 2. Create fluidCellSet as complement (all cells not in solid)
+// 3. Convert both cellSets to cellZones for splitMeshRegions
+
+actions
+(
+    // ----------------------------------------------------------------
+    // Step 1: build solidCellSet
+    // ----------------------------------------------------------------
+
+    // Start fresh
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     ( 0.0000 0.0000 -1 ) ( 0.0048 0.0002 1 );  // solid base
+    }
+
+    // Rib period 0:  x=[0.0000, 0.0002]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0000 0.0002 -1 ) ( 0.0002 0.0006 1 );
+    }
+
+    // Rib period 1:  x=[0.0004, 0.0006]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0004 0.0002 -1 ) ( 0.0006 0.0006 1 );
+    }
+
+    // Rib period 2:  x=[0.0008, 0.0010]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0008 0.0002 -1 ) ( 0.0010 0.0006 1 );
+    }
+
+    // Rib period 3:  x=[0.0012, 0.0014]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0012 0.0002 -1 ) ( 0.0014 0.0006 1 );
+    }
+
+    // Rib period 4:  x=[0.0016, 0.0018]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0016 0.0002 -1 ) ( 0.0018 0.0006 1 );
+    }
+
+    // Rib period 5:  x=[0.0020, 0.0022]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0020 0.0002 -1 ) ( 0.0022 0.0006 1 );
+    }
+
+    // Rib period 6:  x=[0.0024, 0.0026]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0024 0.0002 -1 ) ( 0.0026 0.0006 1 );
+    }
+
+    // Rib period 7:  x=[0.0028, 0.0030]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0028 0.0002 -1 ) ( 0.0030 0.0006 1 );
+    }
+
+    // Rib period 8:  x=[0.0032, 0.0034]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0032 0.0002 -1 ) ( 0.0034 0.0006 1 );
+    }
+
+    // Rib period 9:  x=[0.0036, 0.0038]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0036 0.0002 -1 ) ( 0.0038 0.0006 1 );
+    }
+
+    // Rib period 10: x=[0.0040, 0.0042]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0040 0.0002 -1 ) ( 0.0042 0.0006 1 );
+    }
+
+    // Rib period 11: x=[0.0044, 0.0046]
+    {
+        name    solidCellSet;
+        type    cellSet;
+        action  add;
+        source  boxToCell;
+        box     ( 0.0044 0.0002 -1 ) ( 0.0046 0.0006 1 );
+    }
+
+    // ----------------------------------------------------------------
+    // Step 2: build fluidCellSet as complement of solidCellSet
+    // ----------------------------------------------------------------
+    {
+        name    fluidCellSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     ( -1 -1 -1 ) ( 1 1 1 );   // select all cells
+    }
+    {
+        name    fluidCellSet;
+        type    cellSet;
+        action  subtract;
+        source  cellToCell;
+        set     solidCellSet;
+    }
+
+    // ----------------------------------------------------------------
+    // Step 3: convert cellSets to cellZones
+    // splitMeshRegions -cellZones reads these zone names
+    // ----------------------------------------------------------------
+    {
+        name    solid;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     solidCellSet;
+    }
+    {
+        name    fluid;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     fluidCellSet;
+    }
+);
+
+// ************************************************************************* //
