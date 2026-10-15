@@ -20,3 +20,4 @@ wmake solver/multiRegionPhaseChangeFlow
 wmake solver/interFlow
 wmake solver/compressibleInterFlow
 wmake solver/multiRegionBoilingFlow
+wmake solver/multiRegionBoilingIcoFlow

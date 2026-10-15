@@ -1,0 +1,5 @@
+fluid/multiCourantNo.C
+solid/solidRegionDiffNo.C
+multiRegionBoilingIcoFlow.C
+
+EXE = $(FOAM_USER_APPBIN)/multiRegionBoilingIcoFlow
